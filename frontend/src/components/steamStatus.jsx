@@ -4,7 +4,9 @@ import { faCircleNotch, faUser, faUserSlash, faUserClock, faGamepad } from '@for
 import useSteam from '../hookers/useSteam'; // Import your custom hook
 
 const SteamStatus = ({ steamId }) => {
-  const { data: player, error } = useSteam(steamId, 'stats'); // Use the custom hook
+  const { data: player, isLoading, error } = useSteam(steamId, 'stats'); // Use the custom hook
+
+  if (isLoading) return <div>Loading...</div>;
 
   const getStatusIcon = (personastate, gameextrainfo) => {
     if (gameextrainfo) return faGamepad;

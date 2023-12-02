@@ -13,6 +13,7 @@ const SteamRecentlyPlayedGames = ({ steamId }) => {
     <div>
       <h2>Recently Played Games</h2>
       <ul>
+
         {games?.map(game => (
           <li key={game.appid}>
             <img src={game.img_icon_url} alt={game.name} />
@@ -21,6 +22,8 @@ const SteamRecentlyPlayedGames = ({ steamId }) => {
             </span>
           </li>
         ))}
+
+
       </ul>
     </div>
   );
