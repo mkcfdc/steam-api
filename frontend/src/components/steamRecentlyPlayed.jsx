@@ -1,49 +1,33 @@
-import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-
-const API_URL = import.meta.env.VITE_APP_API_URL;
+import useSteam from '../hookers/useSteam'; // Import your custom hook
 
 const SteamRecentlyPlayedGames = ({ steamId }) => {
-    const [games, setGames] = useState([]);
-    const [error, setError] = useState(null);
+  const { data, isLoading, error } = useSteam(steamId, 'recentlyplayedgames'); // Use the custom hook
 
-    useEffect(() => {
-        fetch(`${API_URL}/api/recentlyplayedgames/${steamId}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setGames(data.games || []);
-            })
-            .catch(error => {
-                setError(error.message);
-            });
-    }, [steamId]);
+  if (error) return <div>Error: {error}</div>;
+  if (isLoading) return <div>Loading...</div>;
 
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
+  const games = data?.games || [];
 
-    return (
-        <div>
-            <h2>Recently Played Games</h2>
-            <ul>
-                {games.map(game => (
-                    <li key={game.appid}>
-                        <img src={game.img_icon_url} alt={game.name} />
-                        <span>{game.name} - {game.playtime_forever_formatted}</span>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+  return (
+    <div>
+      <h2>Recently Played Games</h2>
+      <ul>
+        {games?.map(game => (
+          <li key={game.appid}>
+            <img src={game.img_icon_url} alt={game.name} />
+            <span>
+              {game.name} - {game.playtime_forever_formatted}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 SteamRecentlyPlayedGames.propTypes = {
-    steamId: PropTypes.string.isRequired,
+  steamId: PropTypes.string.isRequired,
 };
 
 export default SteamRecentlyPlayedGames;

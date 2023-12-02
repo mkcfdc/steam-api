@@ -1,40 +1,20 @@
-import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-
-const API_URL = import.meta.env.VITE_APP_API_URL;
+import useSteam from '../hookers/useSteam'; // Import your custom hook
 
 const SteamTotalPlaytimeCard = ({ steamId }) => {
-  const [totalPlaytimeHours, setTotalPlaytimeHours] = useState(null);
-  const [totalPlaytimeWeekHours, setTotalPlaytimeWeekHours] = useState(null);
-
-  useEffect(() => {
-    fetch(`${API_URL}/api/totalplaytime/${steamId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        const totalHours = data.total_playtime_forever_hours;
-        const totalWeekHours = data.total_playtime_week_hours;
-        setTotalPlaytimeHours(totalHours);
-        setTotalPlaytimeWeekHours(totalWeekHours);
-      })
-      .catch((error) => {
-        console.error('Error fetching total playtime:', error);
-      });
-  }, [steamId]);
+  const { data, isLoading } = useSteam(steamId, 'totalplaytime'); // Use the custom hook
 
   return (
     <div className="card">
       <div className="card-body">
         <h2 className="card-title">Total Playtime</h2>
-        {totalPlaytimeHours !== null ? (
-          <p className="card-text">Total playtime: {totalPlaytimeHours} hours</p>
-        ) : (
+        {isLoading ? (
           <p className="card-text">Loading total playtime...</p>
-        )}
-
-        {totalPlaytimeWeekHours !== null ? (
-          <p className="card-text">Playtime in the last 2 weeks: {totalPlaytimeWeekHours} hours</p>
         ) : (
-          <p className="card-text">Loading playtime in the last 2 weeks...</p>
+          <>
+            <p className="card-text">Total playtime: {data?.total_playtime_forever_hours} hours</p>
+            <p className="card-text">Playtime in the last 2 weeks: {data?.total_playtime_week_hours} hours</p>
+          </>
         )}
       </div>
     </div>

@@ -1,40 +1,18 @@
-import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-
-const API_URL = import.meta.env.VITE_APP_API_URL;
+import useSteam from '../hookers/useSteam.js'; // Import your custom hook
 
 const SteamAvatar = ({ steamId }) => {
-  const [avatarUrl, setAvatarUrl] = useState(null);
-
-  useEffect(() => {
-    const fetchAvatar = async () => {
-        try {
-          const response = await fetch(`${API_URL}/api/stats/${steamId}`);
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          const data = await response.json();
-      
-          // Check if the response contains data
-          if (Array.isArray(data) && data.length > 0) {
-            const avatarFullUrl = data[0].avatarfull;
-            setAvatarUrl(avatarFullUrl);
-          } else {
-            console.error('No avatar data found in the response');
-          }
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
-
-    fetchAvatar();
-  }, [steamId]);
+  const { data, isLoading, error } = useSteam(steamId, 'stats'); // Use the custom hook
 
   return (
     <div>
-      {avatarUrl ? (
+      {isLoading ? (
+        <p>Loading avatar...</p>
+      ) : error ? (
+        <p>Error: {error}</p>
+      ) : data ? (
         <img
-          src={avatarUrl}
+          src={data.avatarfull}
           alt="Avatar"
           style={{
             alignContent: 'center',
@@ -43,15 +21,14 @@ const SteamAvatar = ({ steamId }) => {
           }}
         />
       ) : (
-        <p>Loading avatar...</p>
+        <p>No avatar data found</p>
       )}
     </div>
   );
-
 };
 
 SteamAvatar.propTypes = {
-    steamId: PropTypes.string.isRequired,
+  steamId: PropTypes.string.isRequired,
 };
 
 export default SteamAvatar;
