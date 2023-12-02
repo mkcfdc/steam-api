@@ -1,0 +1,125 @@
+:root {
+  --steam-dark-blue: #1b2838;
+  --steam-light-blue: #66c0f4;
+  --online-green: #4CAF50;
+  --away-orange: #FF9800;
+  --offline-red: #F44336;
+  --text-color: #E0E0E0;
+  --background-color: #121212;
+  --button-hover-color: #ffffff;
+  --button-background: #333333;
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Status Colours */
+.status-online {
+  color: var(--online-green);
+}
+
+.status-away {
+  color: var(--away-orange);
+}
+
+.status-offline {
+  color: var(--offline-red);
+}
+
+button, .button {
+  background-color: var(--button-background);
+  color: var(--steam-light-blue);
+  padding: 10px 15px;
+  border: 1px solid var(--steam-light-blue);
+  border-radius: 4px;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  display: inline-block;
+  margin: 10px;
+}
+
+button:hover, .button:hover,
+button:focus, .button:focus {
+  background-color: var(--steam-light-blue);
+  color: var(--button-hover-color);
+}
+
+/* Specific Button Styles */
+.join-game-button, .add-me-steam-button {
+  background-color: var(--steam-dark-blue);
+  color: var(--steam-light-blue);
+  padding: 10px 15px;
+  border: 1px solid var(--steam-light-blue);
+  border-radius: 4px;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  display: inline-block;
+  margin: 10px;
+}
+
+.join-game-button:hover, .add-me-steam-button:hover,
+.join-game-button:focus, .add-me-steam-button:focus {
+  background-color: var(--steam-light-blue);
+  color: var(--button-hover-color);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background-color: #242424;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  color: var(--text-color);
+}
+
+li img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+h1 {
+  margin-bottom: 2rem;
+  color: var(--text-color);
+}
+
+/* Responsive Flexbox Layout */
+div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  div {
+    flex-direction: column;
+  }
+}

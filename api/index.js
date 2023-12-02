@@ -2,6 +2,10 @@ import express from 'express';
 import Redis from 'ioredis';
 import axios from 'axios';
 
+import cors from 'cors';
+import 'dotenv/config';
+
+
 const app = express();
 
 // Configure and create a Redis client
@@ -16,27 +20,33 @@ const STEAM_API_BASE_URL = process.env.STEAM_API_BASE_URL;
 const STEAM_API_KEY = process.env.STEAM_API_KEY;
 const STEAM_ID = process.env.STEAM_ID;
 
+app.use(cors());
+
 app.use(express.json());
 
-async function cacheMiddleware(req, res, next) {
-    const key = `__api__${req.originalUrl || req.url}`;
 
-    try {
-        const cachedBody = await redis.get(key);
-        if (cachedBody) return res.send(cachedBody);
 
-        // Overwrite res.json to cache the response
-        res.json = async (body) => {
-            const formattedBody = JSON.stringify(body, null, 4);
-            await redis.set(key, formattedBody, 'EX', 60 * 60); // Cache for 1 hour
-            res.send(formattedBody);
-        };
+function cacheMiddleware(expiryTime = 3600) {
+    return async function(req, res, next) {
+        const key = `__api__${req.originalUrl || req.url}`;
 
-        next();
-    } catch (error) {
-        console.error('Redis error:', error);
-        next(error);
-    }
+        try {
+            const cachedBody = await redis.get(key);
+            if (cachedBody) return res.send(cachedBody);
+
+            // Overwrite res.json to cache the response
+            res.json = async (body) => {
+                const formattedBody = JSON.stringify(body, null, 4);
+                await redis.set(key, formattedBody, 'EX', expiryTime);
+                res.send(formattedBody);
+            };
+
+            next();
+        } catch (error) {
+            console.error('Redis error:', error);
+            next(error);
+        }
+    };
 }
 
 
@@ -78,7 +88,7 @@ async function fetchSteamData(endpoint, queryParams) {
     }
 }
 
-app.get('/api/stats/:steamId', async (req, res) => {
+app.get('/api/stats/:steamId', cacheMiddleware(1200), async (req, res) => {
     const steamId = req.params.steamId || STEAM_ID;
     const endpoint = '/ISteamUser/GetPlayerSummaries/v0002/';
     const queryParams = `steamids=${steamId}`;
@@ -93,7 +103,7 @@ app.get('/api/stats/:steamId', async (req, res) => {
             if (player.timecreated) player.timecreated_formatted = formatDate(new Date(player.timecreated * 1000));
 
             // Adding readable status for personastate
-            player.personastate_description = getPersonaStateDescription(player.personastate);
+            player.personastate_formatted = getPersonaStateDescription(player.personastate);
 
             return player;
         });
@@ -104,7 +114,36 @@ app.get('/api/stats/:steamId', async (req, res) => {
     }
 });
 
-app.get('/api/recentlyplayedgames/:steamId', cacheMiddleware, async (req, res) => {
+app.get('/api/totalplaytime/:steamId', cacheMiddleware(), async (req, res) => {
+    const steamId = req.params.steamId;
+    const queryParams = `steamid=${steamId}&include_appinfo=${req.query.include_appinfo || 'true'}&include_played_free_games=${req.query.include_played_free_games || 'false'}&format=json`;
+  
+    try {
+      const endpoint = '/IPlayerService/GetOwnedGames/v0001/';
+      const data = await fetchSteamData(endpoint, queryParams);
+      let ownedGames = data.response.games;
+  
+      // Calculate the total playtime in minutes for the week and forever
+      const totalPlaytimeMinutesWeek = ownedGames.reduce((acc, game) => acc + (game.playtime_2weeks || 0), 0);
+      const totalPlaytimeMinutesForever = ownedGames.reduce((acc, game) => acc + game.playtime_forever, 0);
+  
+      // Calculate the total playtime in hours for the week and forever
+      const totalPlaytimeHoursWeek = (totalPlaytimeMinutesWeek / 60).toFixed(2);
+      const totalPlaytimeHoursForever = (totalPlaytimeMinutesForever / 60).toFixed(2);
+  
+      res.json({
+        total_playtime_week_minutes: totalPlaytimeMinutesWeek,
+        total_playtime_week_hours: totalPlaytimeHoursWeek,
+        total_playtime_forever_minutes: totalPlaytimeMinutesForever,
+        total_playtime_forever_hours: totalPlaytimeHoursForever,
+      });
+    } catch (error) {
+      console.error('Error fetching owned games:', error);
+      res.status(500).json({ error: 'Error fetching owned games' });
+    }
+  });  
+  
+app.get('/api/recentlyplayedgames/:steamId', cacheMiddleware(), async (req, res) => {
     const steamId = req.params.steamId || STEAM_ID;
     const queryParams = `steamid=${steamId}&format=json&count=${req.query.count || ''}`;
 
@@ -133,7 +172,7 @@ app.get('/api/recentlyplayedgames/:steamId', cacheMiddleware, async (req, res) =
 });
 
 
-app.get('/api/ownedgames/:steamId', cacheMiddleware, async (req, res) => {
+app.get('/api/ownedgames/:steamId', cacheMiddleware(), async (req, res) => {
     const steamId = req.params.steamId;
     const queryParams = `steamid=${steamId}&include_appinfo=${req.query.include_appinfo || 'true'}&include_played_free_games=${req.query.include_played_free_games || 'false'}&format=json`;
 
@@ -141,14 +180,14 @@ app.get('/api/ownedgames/:steamId', cacheMiddleware, async (req, res) => {
         const endpoint = '/IPlayerService/GetOwnedGames/v0001/';
         const data = await fetchSteamData(endpoint, queryParams);
         let ownedGames = data.response;
-        
+
         // Process games for formatting and image URLs
         if (ownedGames.games) {
             ownedGames.games = ownedGames.games.map(game => {
                 // Formatting image URLs
                 if (game.img_icon_url)
                     game.img_icon_url = `https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.img_icon_url}.jpg`;
-                if (game.img_logo_url) 
+                if (game.img_logo_url)
                     game.img_logo_url = `https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.img_logo_url}.jpg`;
 
                 // Formatting playtimes
@@ -166,7 +205,7 @@ app.get('/api/ownedgames/:steamId', cacheMiddleware, async (req, res) => {
     }
 });
 
-app.get('/api/playerachievements/:steamId/:appId', cacheMiddleware, async (req, res) => {
+app.get('/api/playerachievements/:steamId/:appId', cacheMiddleware(), async (req, res) => {
     const steamId = req.params.steamId;
     const appId = req.params.appId;
     const queryParams = `appid=${appId}&steamid=${steamId}&l=${req.query.l || 'english'}`;
@@ -174,7 +213,7 @@ app.get('/api/playerachievements/:steamId/:appId', cacheMiddleware, async (req, 
     try {
         const endpoint = '/ISteamUserStats/GetPlayerAchievements/v0001/';
         const playerAchievements = await fetchSteamData(endpoint, queryParams);
-        
+
         res.json(playerAchievements.playerstats);
     } catch (error) {
         console.error('Error fetching player achievements:', error);
@@ -182,7 +221,7 @@ app.get('/api/playerachievements/:steamId/:appId', cacheMiddleware, async (req, 
     }
 });
 
-app.get('/api/userstatsforgame/:steamId/:appId', cacheMiddleware, async (req, res) => {
+app.get('/api/userstatsforgame/:steamId/:appId', cacheMiddleware(), async (req, res) => {
     const steamId = req.params.steamId;
     const appId = req.params.appId;
     const queryParams = `appid=${appId}&steamid=${steamId}&l=${req.query.l || 'english'}`;
@@ -190,7 +229,7 @@ app.get('/api/userstatsforgame/:steamId/:appId', cacheMiddleware, async (req, re
     try {
         const endpoint = '/ISteamUserStats/GetUserStatsForGame/v0002/';
         const userStatsForGame = await fetchSteamData(endpoint, queryParams);
-        
+
         res.json(userStatsForGame.playerstats);
     } catch (error) {
         console.error('Error fetching user stats for game:', error);
