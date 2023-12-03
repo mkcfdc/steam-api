@@ -205,7 +205,7 @@ app.get('/api/ownedgames/:steamId', cacheMiddleware(), async (req, res) => {
     }
 });
 
-app.get('/api/playerachievements/:steamId/:appId', cacheMiddleware(), async (req, res) => {
+app.get('/api/playerachievements/:appId/:steamId', cacheMiddleware(), async (req, res) => {
     const steamId = req.params.steamId;
     const appId = req.params.appId;
     const queryParams = `appid=${appId}&steamid=${steamId}&l=${req.query.l || 'english'}`;
@@ -221,7 +221,7 @@ app.get('/api/playerachievements/:steamId/:appId', cacheMiddleware(), async (req
     }
 });
 
-app.get('/api/userstatsforgame/:steamId/:appId', cacheMiddleware(), async (req, res) => {
+app.get('/api/userstatsforgame/:appId/:steamId', cacheMiddleware(), async (req, res) => {
     const steamId = req.params.steamId;
     const appId = req.params.appId;
     const queryParams = `appid=${appId}&steamid=${steamId}&l=${req.query.l || 'english'}`;
