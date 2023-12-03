@@ -1,12 +1,15 @@
 import Redis from 'ioredis';
 
 // Configure and create a Redis client
-export const redis = new Redis("rediss://default:e267d720cbc3453f9f5c024c60064095@usw2-united-worm-30496.upstash.io:30496");
+const redisConfig = process.env.REDIS_URL
+  ? { url: process.env.REDIS_URL }
+  : { host: 'localhost', port: 6379 };
+export const redis = new Redis(redisConfig);
 
 redis.on('error', (err) => console.error('Redis error:', err));
 
 export function cacheMiddleware(expiryTime = 3600) {
-    return async function(req, res, next) {
+    return async function (req, res, next) {
         const key = `__api__${req.originalUrl || req.url}`;
 
         try {
