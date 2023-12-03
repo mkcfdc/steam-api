@@ -13,4 +13,4 @@ app.use(express.json());
 // Load routes
 loadRoutes(app, new URL('./routes/', import.meta.url));
 
-app.listen(port, () => console.log(`Server is running on port ${port}`));     
+app.listen(port, () => console.log(`Server is running on port ${port}`));
