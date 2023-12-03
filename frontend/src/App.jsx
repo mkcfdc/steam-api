@@ -17,7 +17,7 @@ const HomePage = () => {
             <div className="steam-components">
                 <span><SteamAvatar steamId={steamId} /></span>
                 <span><SteamStatus steamId={steamId} /></span>
-                <span><AddMeOnSteam steamUsername='gladwater' /></span>
+                <span><AddMeOnSteam steamId={steamId} /></span>
             </div>
 
             <div>

@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 
-const AddMeOnSteam = ({ steamUsername }) => {
+const AddMeOnSteam = ({ steamId }) => {
     return (
         <a 
-            href={`https://steamcommunity.com/id/${steamUsername}`} 
+            href={`steam://friends/add/${steamId}`} 
             target="_blank" 
             rel="noopener noreferrer" 
             className="add-me-steam-button"
@@ -14,7 +14,7 @@ const AddMeOnSteam = ({ steamUsername }) => {
 };
 
 AddMeOnSteam.propTypes = {
-    steamUsername: PropTypes.string.isRequired,
+    steamId: PropTypes.string.isRequired,
 };
 
 export default AddMeOnSteam;
