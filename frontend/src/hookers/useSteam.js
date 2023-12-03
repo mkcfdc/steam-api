@@ -4,34 +4,26 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
 const useSteam = (steamId, endpoint = 'stats') => {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [state, setState] = useState({ data: null, isLoading: true, error: null });
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/${endpoint}/${steamId}`);
-        if (response.status !== 200) throw new Error('Network response was not ok');
-        const responseData = response.data;
-
-        if (Array.isArray(responseData) && responseData.length > 0) {
-          setData(responseData[0]);
-        } else {
-          setData(responseData);
-        }
-
-        setIsLoading(false);
+        const response = await axios.get(`${API_URL}/api/${endpoint}/${steamId}`, { signal: controller.signal });
+        setState({ data: Array.isArray(response.data) && response.data.length > 0 ? response.data[0] : response.data, isLoading: false, error: null });
       } catch (error) {
-        setError(`Error fetching data: ${error.message}`);
-        setIsLoading(false);
+        if (!axios.isCancel(error)) setState({ data: null, isLoading: false, error: `Error fetching data: ${error.message}` });
       }
     };
 
     fetchData();
+
+    return () => controller.abort();
   }, [steamId, endpoint]);
 
-  return { data, isLoading, error };
+  return state;
 };
 
 export default useSteam;

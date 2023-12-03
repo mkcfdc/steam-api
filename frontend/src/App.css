@@ -44,7 +44,8 @@ body {
   color: var(--offline-red);
 }
 
-button, .button {
+button,
+.button {
   background-color: var(--button-background);
   color: var(--steam-light-blue);
   padding: 10px 15px;
@@ -58,14 +59,17 @@ button, .button {
   margin: 10px;
 }
 
-button:hover, .button:hover,
-button:focus, .button:focus {
+button:hover,
+.button:hover,
+button:focus,
+.button:focus {
   background-color: var(--steam-light-blue);
   color: var(--button-hover-color);
 }
 
 /* Specific Button Styles */
-.join-game-button, .add-me-steam-button {
+.join-game-button,
+.add-me-steam-button {
   background-color: var(--steam-dark-blue);
   color: var(--steam-light-blue);
   padding: 10px 15px;
@@ -79,10 +83,26 @@ button:focus, .button:focus {
   margin: 10px;
 }
 
-.join-game-button:hover, .add-me-steam-button:hover,
-.join-game-button:focus, .add-me-steam-button:focus {
+.join-game-button:hover,
+.add-me-steam-button:hover,
+.join-game-button:focus,
+.add-me-steam-button:focus {
   background-color: var(--steam-light-blue);
   color: var(--button-hover-color);
+}
+
+.steam-components {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.steam-components > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-left: 10px; /* or any space you want between the avatar and the text/button */
 }
 
 ul {

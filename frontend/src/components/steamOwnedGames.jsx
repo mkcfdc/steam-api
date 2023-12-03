@@ -11,13 +11,15 @@ const SteamOwnedGames = ({ steamId }) => {
 
     const games = data?.games || [];
 
+    // Determine which games to display
+    const gamesToDisplay = showAll ? games : games.slice(0, 5);
+
     return (
-        <div>
+        <>
             <h2>Owned Games</h2>
             <ul>
 
-
-                {games.slice(0, 5).map(game => (
+                {gamesToDisplay.map(game => (
                     <li key={game.appid}>
                         <img src={game.img_icon_url} alt={game.name} />
                         <div>
@@ -33,7 +35,7 @@ const SteamOwnedGames = ({ steamId }) => {
                     {showAll ? 'Hide' : `Display all ${games.length}`}
                 </button>
             )}
-        </div>
+        </>
     );
 };
 

@@ -11,13 +11,13 @@ const HomePage = () => {
     const steamId = import.meta.env.VITE_APP_STEAM_ID;
 
     return (
-        <div>
+        <>
             <h1>Welcome to My Steam Profile Page</h1>
 
-            <div>
-            <span><SteamAvatar steamId={steamId} /></span>
-            <span><SteamStatus steamId={steamId} /></span>
-            <span><AddMeOnSteam steamUsername='gladwater' /></span>
+            <div className="steam-components">
+                <span><SteamAvatar steamId={steamId} /></span>
+                <span><SteamStatus steamId={steamId} /></span>
+                <span><AddMeOnSteam steamUsername='gladwater' /></span>
             </div>
 
             <div>
@@ -26,7 +26,7 @@ const HomePage = () => {
 
             <SteamRecentlyPlayedGames steamId={steamId} />
             <SteamOwnedGames steamId={steamId} />
-        </div>
+        </>
     );
 };
 

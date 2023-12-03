@@ -1,30 +1,26 @@
 import PropTypes from 'prop-types';
-import useSteam from '../hookers/useSteam.js'; // Import your custom hook
+
+import useSteam from '../hookers/useSteam';
+
+import styles from './SteamAvatar.module.css';
 
 const SteamAvatar = ({ steamId }) => {
-  const { data, isLoading, error } = useSteam(steamId, 'stats'); // Use the custom hook
+  const { data, isLoading, error } = useSteam(steamId, 'stats');
 
-  return (
-    <div>
-      {isLoading ? (
-        <p>Loading avatar...</p>
-      ) : error ? (
-        <p>Error: {error}</p>
-      ) : data ? (
-        <img
-          src={data.avatarfull}
-          alt="Avatar"
-          style={{
-            alignContent: 'center',
-            borderRadius: '50%', // Make it round
-            border: '2px solid #ccc', // Add a border
-          }}
-        />
-      ) : (
-        <p>No avatar data found</p>
-      )}
-    </div>
-  );
+  if (isLoading) return <p>Loading avatar...</p>;
+  if (error) return <p>Unable to load avatar. Please try again later.</p>;
+
+  if (data) {
+    return (
+      <img
+        src={data.avatarfull}
+        alt="Avatar"
+        className={styles.avatar}
+      />
+    );
+  }
+
+  return <p>Avatar not available.</p>;
 };
 
 SteamAvatar.propTypes = {
@@ -32,3 +28,4 @@ SteamAvatar.propTypes = {
 };
 
 export default SteamAvatar;
+

@@ -9,34 +9,25 @@ const SteamStatus = ({ steamId }) => {
   if (isLoading) return <div>Loading...</div>;
 
   const getStatusIcon = (personastate, gameextrainfo) => {
-    if (gameextrainfo) return faGamepad;
-    switch (personastate) {
-      case 0:
-        return faUserSlash; // Offline
-      case 1:
-        return faUser; // Online
-      case 2:
-        return faUserClock; // Away
-      default:
-        return faCircleNotch; // Loading or unknown status
-    }
+    const statusIcons = {
+      0: faUserSlash, // Offline
+      1: faUser,     // Online
+      2: faUserClock // Away
+    };
+    return gameextrainfo ? faGamepad : (statusIcons[personastate] || faCircleNotch);
   };
 
   const getStatusClass = (personastate) => {
-    switch (personastate) {
-      case 0:
-        return 'status-offline';
-      case 1:
-        return 'status-online';
-      case 2:
-        return 'status-away';
-      default:
-        return '';
-    }
+    const statusClasses = {
+      0: 'status-offline',
+      1: 'status-online',
+      2: 'status-away'
+    };
+    return statusClasses[personastate] || '';
   };
 
   return (
-    <div>
+    <>
       {error ? (
         <span>Error: {error}</span>
       ) : (
@@ -53,7 +44,7 @@ const SteamStatus = ({ steamId }) => {
           )}
         </>
       )}
-    </div>
+    </>
   );
 };
 
