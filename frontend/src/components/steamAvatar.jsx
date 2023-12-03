@@ -9,18 +9,9 @@ const SteamAvatar = ({ steamId }) => {
 
   if (isLoading) return <p>Loading avatar...</p>;
   if (error) return <p>Unable to load avatar. Please try again later.</p>;
+  if (!data) return <p>Avatar not available.</p>;
 
-  if (data) {
-    return (
-      <img
-        src={data.avatarfull}
-        alt="Avatar"
-        className={styles.avatar}
-      />
-    );
-  }
-
-  return <p>Avatar not available.</p>;
+  return <img src={data.avatarfull} alt="Avatar" className={styles.avatar} />;
 };
 
 SteamAvatar.propTypes = {
@@ -28,4 +19,3 @@ SteamAvatar.propTypes = {
 };
 
 export default SteamAvatar;
-
