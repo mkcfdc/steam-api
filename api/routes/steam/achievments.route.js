@@ -20,7 +20,7 @@ router.get('/playerachievements/:appId/:steamId', cacheMiddleware(), async (req,
     }
 });
 
-router.get('/api/userstatsforgame/:appId/:steamId', cacheMiddleware(), async (req, res) => {
+router.get('/userstatsforgame/:appId/:steamId', cacheMiddleware(), async (req, res) => {
     const steamId = req.params.steamId;
     const appId = req.params.appId;
     const queryParams = `appid=${appId}&steamid=${steamId}&l=${req.query.l || 'english'}`;
