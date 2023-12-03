@@ -6,7 +6,7 @@ import { cacheMiddleware } from '../../middleware/cacheMiddleware.js';
 import { fetchSteamData } from '../../helpers/fetchSteamData.js';
 import { formatPlaytime } from '../../helpers/formatting.js';
 
-router.get('/api/recentlyplayedgames/:steamId', cacheMiddleware(), async (req, res) => {
+router.get('/recentlyplayedgames/:steamId', cacheMiddleware(), async (req, res) => {
     const steamId = req.params.steamId;
     const queryParams = `steamid=${steamId}&format=json&count=${req.query.count || ''}`;
 

@@ -4,7 +4,7 @@ const router = express.Router();
 import { cacheMiddleware } from '../../middleware/cacheMiddleware.js';
 import { fetchSteamData } from '../../helpers/fetchSteamData.js';
 
-router.get('/api/totalplaytime/:steamId', cacheMiddleware(), async (req, res) => {
+router.get('/totalplaytime/:steamId', cacheMiddleware(), async (req, res) => {
     const steamId = req.params.steamId;
     const queryParams = `steamid=${steamId}&include_appinfo=${req.query.include_appinfo || 'true'}&include_played_free_games=${req.query.include_played_free_games || 'false'}&format=json`;
   

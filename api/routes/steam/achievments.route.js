@@ -4,7 +4,7 @@ const router = express.Router();
 import { cacheMiddleware } from '../../middleware/cacheMiddleware.js';
 import { fetchSteamData } from '../../helpers/fetchSteamData.js';
 
-router.get('/api/playerachievements/:appId/:steamId', cacheMiddleware(), async (req, res) => {
+router.get('/playerachievements/:appId/:steamId', cacheMiddleware(), async (req, res) => {
     const steamId = req.params.steamId;
     const appId = req.params.appId;
     const queryParams = `appid=${appId}&steamid=${steamId}&l=${req.query.l || 'english'}`;

@@ -7,7 +7,7 @@ import { fetchSteamData } from '../../helpers/fetchSteamData.js';
 import { getPersonaStateDescription } from '../../helpers/getPersonaStateDescription.js';
 import { formatDate } from '../../helpers/formatting.js';
 
-router.get('/api/stats/:steamId', cacheMiddleware(1200), async (req, res) => {
+router.get('/stats/:steamId', cacheMiddleware(1200), async (req, res) => {
     const steamId = req.params.steamId;
     const endpoint = '/ISteamUser/GetPlayerSummaries/v0002/';
     const queryParams = `steamids=${steamId}`;

@@ -11,7 +11,7 @@ const useSteam = (steamId, endpoint = 'stats') => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/${endpoint}/${steamId}`, { signal: controller.signal });
+        const response = await axios.get(`${API_URL}/${endpoint}/${steamId}`, { signal: controller.signal });
         setState({ data: Array.isArray(response.data) && response.data.length > 0 ? response.data[0] : response.data, isLoading: false, error: null });
       } catch (error) {
         if (!axios.isCancel(error)) setState({ data: null, isLoading: false, error: `Error fetching data: ${error.message}` });
