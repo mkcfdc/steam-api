@@ -1,11 +1,11 @@
-import express from 'express';
-import cors from 'cors';
-import 'dotenv/config';
+import express from 'express'; import cors from 'cors';
+import compression from 'compression'; import 'dotenv/config';
 
 import { loadRoutes } from './helpers/loadRoutes.js';
 
 const app = express();
 
+app.use(compression());
 app.use(cors());
 app.use(express.json());
 
