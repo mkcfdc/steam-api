@@ -8,6 +8,9 @@ import { fetchSteamData } from '../../helpers/fetchSteamData.js';
 import { formatPlaytime } from '../../helpers/formatting.js';
 
 router.get('/ownedgames/:steamId', cacheMiddleware(), async (req, res) => {
+
+    let totalSpent = 0;
+
     const steamId = req.params.steamId;
     const queryParams = `steamid=${steamId}&include_appinfo=${req.query.include_appinfo || 'true'}&include_played_free_games=${req.query.include_played_free_games || 'false'}&format=json`;
 
@@ -15,9 +18,6 @@ router.get('/ownedgames/:steamId', cacheMiddleware(), async (req, res) => {
         const endpoint = '/IPlayerService/GetOwnedGames/v0001/';
         const data = await fetchSteamData(endpoint, queryParams);
         let ownedGames = data.response;
-
-        // Initialize total spent
-        let totalSpent = 0;
 
         // Process games for formatting and image URLs
         if (ownedGames.games) {

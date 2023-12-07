@@ -12,6 +12,8 @@ import SteamTotalPlaytimeCard from './components/steamTotalPlaytimeCard';
 import SteamTotalDollarSpent from './components/steamTotalSpent';
 
 import './App.css';
+import SteamGamesTable from './components/steamGamesTable';
+// import GameDetailsComponent from './pages/steamGameDetails';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -102,6 +104,8 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/:steamName" element={<HomePage />} />
+                {/*<Route path="/app/:appId" element={<GameDetailsComponent />} />*/}
+                <Route path="/table" element={<SteamGamesTable steamId='76561198092215183' />} />
             </Routes>
         </Router>
     );
