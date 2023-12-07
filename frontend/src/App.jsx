@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
-
+import { Layout, Spin, Typography, Row, Col, Alert } from 'antd';
 import axios from 'axios';
 
 import SteamStatus from './components/steamStatus';
@@ -9,8 +9,12 @@ import SteamOwnedGames from './components/steamOwnedGames';
 import AddMeOnSteam from './components/addMeOnSteam';
 import SteamAvatar from './components/steamAvatar';
 import SteamTotalPlaytimeCard from './components/steamTotalPlaytimeCard';
+import SteamTotalDollarSpent from './components/steamTotalSpent';
 
 import './App.css';
+
+const { Header, Content } = Layout;
+const { Title } = Typography;
 
 const HomePage = () => {
     const { steamName } = useParams();
@@ -44,27 +48,51 @@ const HomePage = () => {
         fetchSteamId();
     }, [steamName]);
 
-
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
-
     return (
-        <>
-            <h1>Welcome to {steamName} Steam Profile Page</h1>
-
-            <div className="steam-components">
-                <span><SteamAvatar steamId={steamId} /></span>
-                <span><SteamStatus steamId={steamId} /></span>
-                <span><AddMeOnSteam steamId={steamId} /></span>
-            </div>
-
-            <div>
-                <SteamTotalPlaytimeCard steamId={steamId} />
-            </div>
-
-            <SteamRecentlyPlayedGames steamId={steamId} />
-            <SteamOwnedGames steamId={steamId} />
-        </>
+        <Layout style={{ backgroundColor: '#121212' }}>
+            <Header>
+                <Title level={2}>Welcome to {steamName} Steam Profile Page</Title>
+            </Header>
+            <Content>
+                {isLoading ? (
+                    <Spin size="large" />
+                ) : error ? (
+                    <Alert message={`Error: ${error}`} type="error" />
+                ) : (
+                    <>
+                        <Row gutter={[16, 16]} justify="center">
+                            <Col>
+                                <SteamAvatar steamId={steamId} />
+                            </Col>
+                            <Col>
+                                <SteamStatus steamId={steamId} />
+                            </Col>
+                            <Col>
+                                <AddMeOnSteam steamId={steamId} />
+                            </Col>
+                        </Row>
+                        <Row gutter={[16, 16]} justify="center">
+                            <Col>
+                                <SteamTotalPlaytimeCard steamId={steamId} />
+                            </Col>
+                            <Col>
+                                <SteamTotalDollarSpent steamId={steamId} />
+                            </Col>
+                        </Row>
+                        <Row justify="center">
+                            <Col span={24}>
+                                <SteamRecentlyPlayedGames steamId={steamId} />
+                            </Col>
+                        </Row>
+                        <Row justify="center">
+                            <Col span={24}>
+                                <SteamOwnedGames steamId={steamId} />
+                            </Col>
+                        </Row>
+                    </>
+                )}
+            </Content>
+        </Layout>
     );
 };
 

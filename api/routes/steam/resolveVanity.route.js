@@ -13,11 +13,9 @@ router.get('/resolveVanity/:vanityUrl', cacheMiddleware(1200), async (req, res) 
         const data = await fetchSteamData(endpoint, queryParams);
         const steamId = data.response.steamid;
 
-        if (steamId) {
-            res.json({ steamId: steamId });
-        } else {
-            res.status(404).json({ error: 'Vanity URL not found' });
-        }
+        if(!steamId) return res.status(404).json({ error: 'Vanity URL not found' });
+        return res.json({ steamId: steamId });
+        
     } catch (error) {
         res.status(500).json({ error: 'Error resolving vanity URL' });
     }

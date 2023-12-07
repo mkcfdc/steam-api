@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
-import useSteam from '../hookers/useSteam'; // Import your custom hook
+import useSteam from '../hookers/useSteam';
+
+import PlaytimeInsult from './steamPlaytimeInsult';
 
 const SteamTotalPlaytimeCard = ({ steamId }) => {
   const { data, isLoading } = useSteam(steamId, 'totalplaytime'); // Use the custom hook
@@ -13,6 +15,9 @@ const SteamTotalPlaytimeCard = ({ steamId }) => {
         ) : (
           <>
             <p className="card-text">Total playtime: {data?.total_playtime_forever_hours} hours</p>
+            <div>
+              <PlaytimeInsult steamId={steamId} />
+            </div>
             <p className="card-text">Playtime in the last 2 weeks: {data?.total_playtime_week_hours} hours</p>
           </>
         )}
