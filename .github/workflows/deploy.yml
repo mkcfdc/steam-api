@@ -20,32 +20,9 @@ jobs:
         port: 22
         script: |
           git pull
-
-    steps:
-    - name: Deploy /api using ssh
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
-        key: ${{ secrets.VPS_SSH_KEY }}
-        port: 22
-        script: |
           cd /root/steam-api/api
           npm install --only=prod
-          pm2 restart api
-
-  deploy-frontend:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Deploy /frontend using ssh
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
-        key: ${{ secrets.VPS_SSH_KEY }}
-        port: 22
-        script: |
+          pm2 restart all
           cd /root/steam-api/frontend
           npm install --only=prod
           npm run build
