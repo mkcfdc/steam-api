@@ -7,7 +7,9 @@ const GameListItem = ({ game, steamId, isSelected, onClick }) => (
   <li onClick={onClick}>
     <img src={game.img_icon_url} alt={`Icon of ${game.name}`} />
     <span>
-      {game.name} - {game.playtime_forever_formatted}
+      <a href={`steam://store/${game.appid}`} rel='noopener'>
+        <strong>{game.name}</strong>
+      </a> - Total Playtime: {game.playtime_forever_formatted}
     </span>
     {isSelected && <SteamUserGameStats steamId={steamId} appId={String(game.appid)} />}
   </li>

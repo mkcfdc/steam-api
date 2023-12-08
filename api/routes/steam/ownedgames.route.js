@@ -1,16 +1,13 @@
 import express from 'express';
-const router = express.Router();
 import axios from 'axios';
-
-import { cacheMiddleware } from '../../middleware/cacheMiddleware.js';
-
+import { cacheMiddleware, redis } from '../../middleware/cacheMiddleware.js';
 import { fetchSteamData } from '../../helpers/fetchSteamData.js';
 import { formatPlaytime } from '../../helpers/formatting.js';
 
+const router = express.Router();
+
 router.get('/ownedgames/:steamId', cacheMiddleware(), async (req, res) => {
-
     let totalSpent = 0;
-
     const steamId = req.params.steamId;
     const queryParams = `steamid=${steamId}&include_appinfo=${req.query.include_appinfo || 'true'}&include_played_free_games=${req.query.include_played_free_games || 'false'}&format=json`;
 
@@ -19,8 +16,17 @@ router.get('/ownedgames/:steamId', cacheMiddleware(), async (req, res) => {
         const data = await fetchSteamData(endpoint, queryParams);
         let ownedGames = data.response;
 
-        // Process games for formatting and image URLs
         if (ownedGames.games) {
+            const appIDs = ownedGames.games.map(game => game.appid);
+
+            // Fetch details for all games in one request
+            const appDetailsResponse = await axios.post(import.meta.env.API_URL + `/appdetails`, {
+                appids: appIDs
+            });
+
+            const appDetails = appDetailsResponse.data;
+
+            // Process each game
             ownedGames.games = await Promise.all(ownedGames.games.map(async (game) => {
                 // Formatting image URLs
                 if (game.img_icon_url)
@@ -33,18 +39,14 @@ router.get('/ownedgames/:steamId', cacheMiddleware(), async (req, res) => {
                 game.playtime_forever_formatted = formatPlaytime(game.playtime_forever);
 
                 try {
-                    // Fetch pricing information for the game using Axios
-                    const appDetailsResponse = await axios.get(`https://store.steampowered.com/api/appdetails?appids=${game.appid}`);
-                    const appDetails = appDetailsResponse.data[game.appid];
 
-                    if (appDetails.success) {
-                        const priceOverview = appDetails.data.price_overview;
-
-                        if (priceOverview) {
-                            const price = priceOverview.final / 100; // Price in the user's currency
+                    // Enrich game data with the details from appDetails
+                    if (appDetails[game.appid] && appDetails[game.appid].success) {
+                        const details = appDetails[game.appid].data;
+                        if (details.price_overview) {
+                            const price = details.price_overview.final / 100; // Price in user's currency
                             game.price = price;
-
-                            // Calculate total spent
+                            game.discount_percent = details.price_overview.discount_percent;
                             totalSpent += price;
                         }
                     }

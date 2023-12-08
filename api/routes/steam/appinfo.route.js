@@ -6,9 +6,8 @@ import { redis as redisClient } from '../../middleware/cacheMiddleware.js';
 
 router.post('/appdetails', async (req, res) => {
     const appids = req.body.appids;
-    if (!Array.isArray(appids)) return res.status(400).send({ error: 'Invalid input, expected an array of appids.' });
-
     const existingScreenshots = JSON.parse(await redisClient.get('screenshots')) || [];
+    if (!Array.isArray(appids)) return res.status(400).send({ error: 'Invalid input, expected an array of appids.' });
 
     try {
         const gameDetails = await Promise.all(appids.map(async (appid) => {
