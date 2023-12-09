@@ -1,0 +1,19 @@
+/* customTableStyle.css */
+
+.custom-table .ant-table {
+    background-color: #242424;
+  }
+  
+  .custom-table .ant-table-thead > tr > th {
+    background-color: #242424;
+    color: #fff; /* Optional: if you want to change the text color */
+  }
+  
+  .custom-table .ant-table-tbody > tr > td {
+    background-color: #242424;
+    color: #fff; /* Optional: if you want to change the text color */
+  }
+
+  .custom-table .ant-table-tbody:hover > tr:hover > td:hover {
+    background-color: #1d1d1d; /* Or any other color */
+  }

@@ -6,6 +6,7 @@ import { redis as redisClient } from '../../middleware/cacheMiddleware.js';
 
 router.post('/appdetails', async (req, res) => {
     const appids = req.body.appids;
+    
     const existingScreenshots = JSON.parse(await redisClient.get('screenshots')) || [];
     if (!Array.isArray(appids)) return res.status(400).send({ error: 'Invalid input, expected an array of appids.' });
 
@@ -23,9 +24,9 @@ router.post('/appdetails', async (req, res) => {
             const gameData = response.data[appid].data;
 
             // Select one random screenshot and add it to the existing array
-            if (gameData.screenshots && gameData.screenshots.length > 0) {
+            if (gameData?.screenshots && gameData?.screenshots.length > 0) {
                 const randomIndex = Math.floor(Math.random() * gameData.screenshots.length);
-                existingScreenshots.push(gameData.screenshots[randomIndex].path_full);
+                existingScreenshots.push(gameData?.screenshots[randomIndex].path_full);
             }
 
             // Cache the result with an expiration time (e.g., 24 hours)

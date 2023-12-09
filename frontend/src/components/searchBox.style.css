@@ -1,0 +1,9 @@
+.custom-message {
+    .ant-message-notice {
+      .ant-message-notice-content {
+        background-color:#121212;
+        color:white;
+        /* Add other styling as needed */
+      }
+    }
+  }

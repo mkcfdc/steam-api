@@ -1,31 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import useSteam from '../hookers/useSteam';
-import SteamUserGameStats from './SteamGameStats';
-
-const GameListItem = ({ game, steamId, isSelected, onClick }) => (
-  <li onClick={onClick}>
-    <img src={game.img_icon_url} alt={`Icon of ${game.name}`} />
-    <span>
-      <a href={`steam://store/${game.appid}`} rel='noopener'>
-        <strong>{game.name}</strong>
-      </a> - Total Playtime: {game.playtime_forever_formatted}
-    </span>
-    {isSelected && <SteamUserGameStats steamId={steamId} appId={String(game.appid)} />}
-  </li>
-);
-
-GameListItem.propTypes = {
-  game: PropTypes.shape({
-    appid: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    img_icon_url: PropTypes.string.isRequired,
-    playtime_forever_formatted: PropTypes.string.isRequired
-  }).isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
-  steamId: PropTypes.number.isRequired
-};
+import GameListItem from './gameListItem';
 
 const SteamRecentlyPlayedGames = ({ steamId }) => {
   const { data, isLoading, error } = useSteam(steamId, 'recentlyplayedgames');

@@ -1,0 +1,19 @@
+/* Default style for mobile */
+.cdkeysTableModal .ant-modal {
+    width: 90% !important;
+  }
+  
+  /* Larger devices (tablets, desktops) */
+  @media (min-width: 768px) {
+    .cdkeysTableModal .ant-modal {
+      width: 70% !important;
+    }
+  }
+  
+  /* Extra large devices (large desktops) */
+  @media (min-width: 1024px) {
+    .cdkeysTableModal .ant-modal {
+      width: 70% !important;
+    }
+  }
+  

@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import useSteam from '../hookers/useSteam'; // Adjust the import path as needed
 import { Table } from 'antd';
 
+import './steamGamesTable.style.css';
+
 const SteamGamesTable = ({ steamId }) => {
   const { data, isLoading, error } = useSteam(steamId, 'ownedgames');
 
@@ -104,7 +106,7 @@ const SteamGamesTable = ({ steamId }) => {
   // Assuming 'data' contains an array of games
   const dataSource = data?.games || [];
 
-  return <Table dataSource={dataSource} columns={columns} rowKey="appid" />;
+  return <Table dataSource={dataSource} columns={columns} rowKey="appid" className="custom-table" />;
 };
 
 SteamGamesTable.propTypes = {

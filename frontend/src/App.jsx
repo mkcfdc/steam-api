@@ -14,6 +14,8 @@ import SteamTotalDollarSpent from './components/steamTotalSpent';
 import './App.css';
 import SteamGamesTable from './components/steamGamesTable';
 import GameDetailsPage from './pages/GameDetailsPage/steamGameDetails';
+import SteamSearchBox from './components/SearchBox';
+import ProductTable from './pages/CdKeysModal/CdKeysTable';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -62,6 +64,7 @@ const HomePage = () => {
                     <Alert message={`Error: ${error}`} type="error" />
                 ) : (
                     <>
+                        <SteamSearchBox />
                         <Row gutter={[16, 16]} justify="center">
                             <Col>
                                 <SteamAvatar steamId={steamId} />
@@ -106,6 +109,7 @@ const App = () => {
                 <Route path="/:steamName" element={<HomePage />} />
                 <Route path="/app/:appId" element={<GameDetailsPage />} />
                 <Route path="/table" element={<SteamGamesTable steamId='76561198092215183' />} />
+                <Route path="/cdkeys" element={<ProductTable query='Grand Theft Auto V' />} />
             </Routes>
         </Router>
     );
