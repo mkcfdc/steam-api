@@ -16,4 +16,4 @@ AddMeOnSteam.propTypes = {
     steamId: PropTypes.string.isRequired, // Consider more specific validation if necessary
 };
 
-export default AddMeOnSteam;
+export default AddMeOnSteam; 
