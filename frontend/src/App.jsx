@@ -12,10 +12,8 @@ import SteamTotalPlaytimeCard from './components/steamTotalPlaytimeCard';
 import SteamTotalDollarSpent from './components/steamTotalSpent';
 
 import './App.css';
-import SteamGamesTable from './components/steamGamesTable';
 import GameDetailsPage from './pages/GameDetailsPage/steamGameDetails';
 import SteamSearchBox from './components/SearchBox';
-import ProductTable from './pages/CdKeysModal/CdKeysTable';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -53,7 +51,7 @@ const HomePage = () => {
     }, [steamName]);
 
     return (
-        <Layout style={{ backgroundColor: '#121212' }}>
+        <Layout style={{ backgroundColor: '#121212', minHeight: '100vh' }}>
             <Header>
                 <Title level={2}>Welcome to {steamName} Steam Profile Page</Title>
             </Header>
@@ -108,8 +106,6 @@ const App = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/:steamName" element={<HomePage />} />
                 <Route path="/app/:appId" element={<GameDetailsPage />} />
-                <Route path="/table" element={<SteamGamesTable steamId='76561198092215183' />} />
-                <Route path="/cdkeys" element={<ProductTable query='Grand Theft Auto V' />} />
             </Routes>
         </Router>
     );

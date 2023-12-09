@@ -16,9 +16,7 @@ const SteamSearchBox = () => {
     });
   };
 
-  const handleChange = (event) => {
-    setInputValue(event.target.value);
-  };
+  const handleChange = (event) => setInputValue(event.target.value);
 
   const handleSubmit = () => {
     if (!inputValue.trim()) {
@@ -35,7 +33,7 @@ const SteamSearchBox = () => {
   };
 
   return (
-    <Space>
+    <Space size="small">
       <Input
         type="text"
         value={inputValue}
