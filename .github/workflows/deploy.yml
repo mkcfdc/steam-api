@@ -20,6 +20,7 @@ jobs:
         key: ${{ secrets.VPS_SSH_KEY }}
         script: |
           # Commands to deploy your application
+          source /root/.nvm/nvm.sh
           cd steam-api
           git pull origin main
           cd frontend
