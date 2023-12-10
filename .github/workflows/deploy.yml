@@ -12,7 +12,7 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v2
 
-    - name: Restart server
+    - name: Grab the new code install and build
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.VPS_HOST }}
@@ -39,5 +39,6 @@ jobs:
         key: ${{ secrets.VPS_SSH_KEY }}
         script: |
           # Restart your application, e.g., using pm2
+          source /root/.nvm/nvm.sh
           pm2 restart all
 
