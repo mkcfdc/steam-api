@@ -23,7 +23,7 @@ const SteamTotalDollarSpent = ({ steamId }) => {
               prefix="$" // Add a dollar sign prefix
             />
           )}
-        />
+        /> <p>* This number is probably wrong. Steam gets their pricing wrong alot!</p>
       </Col>
     </Row>
   );
