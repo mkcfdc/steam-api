@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
-import { Layout, Spin, Typography, Row, Col, Alert } from 'antd';
+import { Layout, Spin, Typography, Space, Row, Col, Alert } from 'antd';
 import axios from 'axios';
 
 import SteamStatus from './components/steamStatus';
@@ -95,7 +95,10 @@ const HomePage = () => {
                             </Col>
                         </Row>
                         <Row justify="center">
-                            <a href="/privacy">User Privacy</a>
+                            <Space>
+                                <a href="/privacy">User Privacy</a>
+                                <a href="https://github.com/mkcfdc/steam-api" target="_blank" rel="noopener noreferrer">View Source on GitHub</a>
+                            </Space>
                         </Row>
                     </>
                 )}
