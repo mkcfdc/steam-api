@@ -15,6 +15,8 @@ import './App.css';
 import GameDetailsPage from './pages/GameDetailsPage/steamGameDetails';
 import SteamSearchBox from './components/SearchBox';
 
+import PrivacyPage from './pages/PrivacyPage/PrivacyPage';
+
 const { Header, Content } = Layout;
 const { Title } = Typography;
 
@@ -92,6 +94,9 @@ const HomePage = () => {
                                 <SteamOwnedGames steamId={steamId} />
                             </Col>
                         </Row>
+                        <Row justify="center">
+                            <a href="/privacy">User Privacy</a>
+                        </Row>
                     </>
                 )}
             </Content>
@@ -106,6 +111,7 @@ const App = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/:steamName" element={<HomePage />} />
                 <Route path="/app/:appId" element={<GameDetailsPage />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
             </Routes>
         </Router>
     );
