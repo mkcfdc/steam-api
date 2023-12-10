@@ -26,7 +26,7 @@ router.post('/appdetails', async (req, res) => {
             // Select one random screenshot and add it to the existing array
             if (gameData?.screenshots && gameData?.screenshots.length > 0) {
                 const randomIndex = Math.floor(Math.random() * gameData.screenshots.length);
-                existingScreenshots.push(gameData?.screenshclearjkkkkkkots[randomIndex].path_full);
+                existingScreenshots.push(gameData?.screenshots[randomIndex].path_full);
             }
 
             // Cache the result with an expiration time (e.g., 24 hours)
