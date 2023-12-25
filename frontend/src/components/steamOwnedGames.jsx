@@ -50,7 +50,7 @@ const SteamOwnedGames = ({ steamId }) => {
 };
 
 SteamOwnedGames.propTypes = {
-  steamId: PropTypes.number.isRequired,
+  steamId: PropTypes.string.isRequired,
 };
 
 export default SteamOwnedGames;

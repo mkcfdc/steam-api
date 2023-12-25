@@ -63,14 +63,14 @@ const CdKeysTable = ({ query }) => {
         return salePriceFormatted;
     };
 
-    const sortedData = [...products].sort((a, b) => {
+    const sortedData = products.data ? [...products.data].sort((a, b) => {
         if (a.match_level === 'full' && b.match_level !== 'full') {
           return -1; // 'full' comes before others
         } else if (b.match_level === 'full' && a.match_level !== 'full') {
           return 1; // 'full' comes before others
         }
         return 0; // No sorting needed if both have the same match_level
-      });
+      }) : [];
 
     const columns = [
         {
@@ -138,7 +138,10 @@ const CdKeysTable = ({ query }) => {
     ];
 
     return (
+        <>
+        <p>Last updated: {products.last_updated}</p>
         <Table dataSource={sortedData} columns={columns} loading={loading} rowKey="name" />
+        </>
     );
 };
 

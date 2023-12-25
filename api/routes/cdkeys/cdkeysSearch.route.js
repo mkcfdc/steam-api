@@ -39,8 +39,8 @@ router.post('/cdkeys/search', async (req, res) => {
   try {
     const response = await axios.request(config);
     const hits = response.data.results[0].hits;
-
-    // Extract only the required fields from each hit
+  
+    // Create an array to store the simplified hits
     const simplifiedHits = hits.map(hit => ({
       name: hit.name,
       url: hit.url,
@@ -56,10 +56,20 @@ router.post('/cdkeys/search', async (req, res) => {
       thumbnail_url: hit.thumbnail_url,
       image_url: hit.image_url
     }));
-
-    // Cache the data in Redis
-    await redis.setex(`cdKeys:${query}`, 86400, JSON.stringify(simplifiedHits));
-    res.json(simplifiedHits);
+  
+    // Get the current timestamp
+    const lastUpdated = new Date();
+  
+    // Cache the data in Redis with the timestamp
+    await redis.setex(`cdKeys:${query}`, 86400, JSON.stringify({
+      data: simplifiedHits,
+      last_updated: lastUpdated.toISOString() // Format the timestamp as ISO string
+    }));
+  
+    res.json({
+      data: simplifiedHits,
+      last_updated: lastUpdated.toISOString() // Include the timestamp in the response
+    });
   } catch (error) {
     console.error('Error during search:', error);
     res.status(500).json({ error: error.message });

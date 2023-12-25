@@ -63,7 +63,7 @@ GameListItem.propTypes = {
   }).isRequired,
   isSelected: PropTypes.bool.isRequired,
   onGameClick: PropTypes.func.isRequired,
-  steamId: PropTypes.number.isRequired,
+  steamId: PropTypes.string.isRequired,
 };
 
 export default GameListItem;
